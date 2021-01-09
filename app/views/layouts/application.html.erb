@@ -8,26 +8,50 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <% flash.each do |name, msg| %>
-      <% content_tag(:div, msg, class: "alert alert-#{name}") %>
-    <% end %>
+    <!--Navbar版面的設定-->
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+      <a href="/" class="navbar-brand">
+        <i class="fas fa-book"></i>
+        <%= link_to "Reddit", root_path %>
+      </a>
+      <% if user_signed_in? %>
+        <!--ms-* 是靠右、me-* 是靠左-->
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <%= link_to 'Submit link', new_link_path, class: "btn btn-outline-primary mx-2" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to 'Account', edit_user_registration_path, class: "btn btn-outline-secondary mx-2" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to 'Sign out', destroy_user_session_path, :method => :delete, class: "btn btn-outline-success mx-2" %>
+          </li>
+        </ul>
+      <% else %>
+        <ul class="navbar-nav ms-auto">
+          <li>
+            <%= link_to 'Sign up', new_user_registration_path, class: "btn btn-outline-info mx-2" %>
+          </li>
+          <li>
+            <%= link_to 'Sign in', new_user_session_path, class: "btn btn-outline-danger mx-2" %>
+          </li>
+        </ul>
+      <% end %>
+    </nav>
     
-    <% if user_signed_in? %>
-      <ul>
-        <li><%= link_to 'Submit link', new_link_path %></li>
-        <li><%= link_to 'Account', edit_user_registration_path %></li>
-        <li><%= link_to 'Sign out', destroy_user_session_path, :method => :delete %></li>
-      </ul>
-    <% else %>
-      <ul>
-        <li><%= link_to 'Sign up', new_user_registration_path %></li>
-        <li><%= link_to 'Sign in', new_user_session_path %></li>
-      </ul>
-    <% end %>
+    <!--yield的版面設定-->
+    <div id="main_content" class="container">
+      <% flash.each do |name, msg| %>
+        <% content_tag(:div, msg, class: "alert alert-#{name}") %>
+      <% end %>
+      <div id="content" class="col-md-9 center-black">
+        <%= yield %>
+      </div>
+    </div>
 
-    <%= yield %>
   </body>
 </html>

@@ -1,30 +1,33 @@
-<p id="notice"><%= notice %></p>
+<% @links.each do |link| %>
+  <div class="card">
+    <div class="card-header fs-2">
+      <%= link_to link.title, link %>
+    </div>
+    <div class="card-body">
+      <p class="card-title fs-5">
+        撰寫人：<%= link.user.name %>
+      </p>
+      <p class="card-title fs-6">
+        最後上傳時間：<%= custom_time_ago_in_words(link.created_at) %> 之前
+      </p>
+      
+      <div class="btn-group">
+        <a class="btn btn-outline-dark btn-sm" href="<%= link.url %>">Visit Link</a>
+          <%= link_to like_link_path(link), method: :put, \
+                                            class: "btn btn-outline-dark btn-sm" do %>
+            <span class="glyphicon glyphicon-chevron-up"></span>
+            Upvote
+            <%= link.get_upvotes.size %>
+          <% end %>
+          <%= link_to dislike_link_path(link), method: :put \
+                                 , class: "btn btn-outline-dark btn-sm" do %>
+            <span class="glyphicon glyphicon-chevron-down"></span>
+            Downvote
+            <%= link.get_downvotes.size %>
+          <% end %>
+      </div>
+    
+    </div>
+  </div>
+<% end %>
 
-<h1>Links</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Url</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @links.each do |link| %>
-      <tr>
-        <td><%= link.title %></td>
-        <td><%= link.url %></td>
-        <td><%= link_to 'Show', link %></td>
-        <% if link.user == current_user %>
-          <td><%= link_to 'Edit', edit_link_path(link) %></td>
-          <td>
-            <%= link_to 'Destroy', link, method: :delete, \
-                          data: { confirm: 'Are you sure?' } %>
-          </td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
